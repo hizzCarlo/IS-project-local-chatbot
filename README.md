@@ -1,38 +1,25 @@
-# sv
+Factorial is a fundamental concept in mathematics, denoted by an exclamation mark following a number. The factorial of a non-negative integer \( n \), written as \( n! \), is the product of all positive integers from 1 to \( n \). Here are some key points about factorials:
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+1. **Definition**:
+   - For any positive integer \( n \), \( n! = n \times (n-1) \times (n-2) \times \ldots \times 3 \times 2 \times 1 \).
+   - By definition, \( 0! = 1 \).
 
-## Creating a project
+2. **Examples**:
+   - \( 5! = 5 \times 4 \times 3 \times 2 \times 1 = 120 \)
+   - \( 3! = 3 \times 2 \times 1 = 6 \)
 
-If you're seeing this, you've probably already done this step. Congrats!
+3. **Recursive Definition**:
+   - \( n! = n \times (n-1)! \) for \( n > 0 \).
+   - This recursive approach is useful for computing factorials, especially for larger numbers.
 
-```bash
-# create a new project in the current directory
-npx sv create
+4. **Growth Rate**:
+   - Factorials grow very rapidly as the number increases. For example, \( 10! = 3,628,800 \), and this continues to grow much faster than exponential functions.
 
-# create a new project in my-app
-npx sv create my-app
-```
+5. **Applications**:
+   - Used in permutations and combinations for probability theory.
+   - Found in binomial coefficients, such as in the formula \( C(n, k) = \frac{n!}{k!(n-k)!} \).
 
-## Developing
+6. **Notational Considerations**:
+   - The exclamation mark is commonly used to denote factorial but should not be confused with other uses of this symbol.
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+In summary, factorials are essential for understanding permutations and combinations and grow rapidly with the input number. They have numerous applications in mathematics and beyond.

@@ -1,12 +1,13 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import type { ChatMessage } from '$lib/types';
+    import type { ChatMessage, AIModel } from '$lib/types';
     import { theme } from '$lib/stores/theme';
 
     let messages: ChatMessage[] = [];
     let inputMessage = '';
     let chatContainer: HTMLDivElement;
     let isLoading = false;
+    let selectedModel: AIModel = 'hizola-assistant';
 
     function toggleTheme() {
         theme.update(t => t === 'light' ? 'dark' : 'light');
@@ -21,13 +22,23 @@
         isLoading = true;
 
         try {
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ message: currentMessage })
-            });
+            let response;
+            if (selectedModel === 'deepseek-r1:1.5b') {
+                // Use GET request for deepseek base model
+                response = await fetch(`/api/chat/deepseek?message=${encodeURIComponent(currentMessage)}`);
+            } else {
+                // Use POST request for other models
+                response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        message: currentMessage,
+                        model: selectedModel 
+                    })
+                });
+            }
 
             const data = await response.json();
             if (data.error) {
@@ -90,16 +101,27 @@
 
     <form on:submit|preventDefault={handleSubmit}>
         <div class="input-container">
-            <input
-                type="text"
-                bind:value={inputMessage}
-                placeholder="Message DeepSeek"
-                disabled={isLoading}
-            />
+            <div class="input-row">
+               
+                <input
+                    type="text"
+                    bind:value={inputMessage}
+                    placeholder="Message AI"
+                    disabled={isLoading}
+                />
+            </div>
             <div class="input-buttons">
-                
+
+                 <select 
+                    bind:value={selectedModel}
+                    class="model-select"
+                >
+                    <option value="hizola-assistant">Hizola Assistant</option>
+                    <option value="deepseek-r1">DeepSeek R1 (Trained)</option>
+                    <option value="deepseek-r1:1.5b">DeepSeek R1 1.5B (Base)</option>
+                </select>
                 <button type="submit" class="send-button" disabled={isLoading}>
-                    <span class="send-icon"> SEND ↑</span>
+                    <span class="send-icon">SEND ↑</span>
                 </button>
             </div>
         </div>
@@ -199,8 +221,32 @@
         background-color: #f0f0f0;
     }
 
+    .input-row {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .model-select {
+        min-width: 180px;
+        padding: 0.5rem;
+        border-radius: 6px;
+        background-color: var(--bg-secondary);
+        color: inherit;
+        border: 1px solid var(--border-color);
+        font-size: 0.9rem;
+    }
+
+    .light .model-select {
+        background-color: #f0f0f0;
+    }
+
+    .dark .model-select {
+        background-color: #2a2a2a;
+    }
+
     input {
-        width: 100%;
+        flex: 1;
         padding: 0.75rem;
         background-color: transparent;
         border: none;
